@@ -16,12 +16,12 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.gaesearch.annotation.SearchCapable;
-import org.gaesearch.dao.__Index__Dao;
-import org.gaesearch.dao.impl.__Index__DaoImpl;
+import org.gaesearch.dao.SearchIndexDao;
+import org.gaesearch.dao.impl.SearchIndexDaoImpl;
 import org.gaesearch.engine.IndexSearchEngine;
 import org.gaesearch.model.SearchBy;
 import org.gaesearch.model.SearchCapableMetaData;
-import org.gaesearch.model.jdo.__Index__;
+import org.gaesearch.model.jdo.SearchIndex;
 import org.gaesearch.util.GSrchUtils;
 
 import com.google.common.collect.Multimap;
@@ -30,7 +30,7 @@ import com.google.common.collect.Multimap;
 public class GIndexSearchEngine implements IndexSearchEngine {
 	private Log logger = LogFactory.getLog(GIndexSearchEngine.class);
 	private final Map<Class<? extends SearchCapable>, SearchCapableMetaData> annotationMap;
-	private __Index__Dao indexDao = new __Index__DaoImpl();
+	private SearchIndexDao indexDao = new SearchIndexDaoImpl();
 
 	public GIndexSearchEngine(String scanPath) {
 		this(new String[] {scanPath});
@@ -160,9 +160,9 @@ public class GIndexSearchEngine implements IndexSearchEngine {
 				// the Search Field map.
 				Map<String, String> fieldNames = searchModel.getSearchFieldNames();
 				// holds the __Index__ items to be saved / updated.
-				Map<String, __Index__> toSave = new HashMap<String, __Index__>();
+				Map<String, SearchIndex> toSave = new HashMap<String, SearchIndex>();
 				// holds the __Index__ items to be deleted (mostly for unindexing)
-				Map<String, __Index__> toDelete = new HashMap<String, __Index__>();
+				Map<String, SearchIndex> toDelete = new HashMap<String, SearchIndex>();
 
 				for (int i = 0; i < fields.length; i++) {
 					Field field = fields[i];
@@ -203,7 +203,7 @@ public class GIndexSearchEngine implements IndexSearchEngine {
 		}
 	}
 
-	private void doIndexingOrUnIndexing(String text, String tokenType, Long refId, boolean isIndexing, Map<String, __Index__> toSave, Map<String, __Index__> toDelete) {
+	private void doIndexingOrUnIndexing(String text, String tokenType, Long refId, boolean isIndexing, Map<String, SearchIndex> toSave, Map<String, SearchIndex> toDelete) {
 		List<String> tokenList = getTokens(text);
 		for (String token : tokenList) {
 			// if unindexing and if token is already put for deletion, simply goto next token.
@@ -212,7 +212,7 @@ public class GIndexSearchEngine implements IndexSearchEngine {
 			}
 
 			// get index for token from local cache
-			__Index__ index = toSave.get(token);
+			SearchIndex index = toSave.get(token);
 
 			// if not found, get it from the Datastore.
 			if (index == null) {
@@ -257,7 +257,7 @@ public class GIndexSearchEngine implements IndexSearchEngine {
 				}
 			} else {
 				if (isIndexing) { // if not found (create new)
-					index = new __Index__();
+					index = new SearchIndex();
 					index.setToken(token);
 					index.addContent(tokenType, refId);
 					toSave.put(token, index);

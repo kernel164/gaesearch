@@ -9,7 +9,7 @@ import com.google.common.collect.Multimap;
 
 @PersistenceCapable
 // http://timyang.net/programming/thrift-protocol-buffers-performance-2/
-public class __Index__ {
+public class SearchIndex {
 	@PrimaryKey
 	@Persistent
 	String token;

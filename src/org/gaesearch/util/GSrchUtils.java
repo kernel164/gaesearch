@@ -19,7 +19,19 @@ import org.gaesearch.annotation.SearchField;
 import org.gaesearch.annotation.SearchKey;
 import org.gaesearch.model.SearchCapableMetaData;
 
+// split("[^\\w]+")
+// http://searchguestbook.appspot.com/searchguestbook.tar.gz
+// http://www.java2s.com/Code/Java/Regular-Expressions/CalculatingWordFrequencieswithRegularExpressions.htm
+// http://www.devx.com/Java/Article/42216/1954?pf=true
+// http://google-appengine.googlegroups.com/web/efficient_paging_using_key_instead_of_a_dedicated_unique_property.txt?gda=SZwzXncAAACSStSWrftt07H4FK2RtvuruXxRXPydL8WzRjsY2Fv9EQQgER4RQV57mxjvIzAWBZmQ3TeCdbqm30Qz_AwgYlIpRbcWRj3jGGBm-fgbnPJIYc4-hXRRmo3Xgj6KgtSLBeZ45alvcyXc30EbEX-RNDZveV4duv6pDMGhhhZdjQlNAw
+// http://snowball.tartarus.org/algorithms/english/stemmer.html
 public class GSrchUtils {
+	static Set<String> NOISE_WORDS = Collections.unmodifiableSet(new HashSet<String>(Arrays.asList("the", "a", "an", "it", "or", "and", "he", "she", "with", "often", "to", "do", "that", "this", "is", "are", "one", "two", "since", "just", "start", "beyond", "could", "not", "be", "from", "on", "could", "as", "say", "said", "will", "if", "by", "on", "often", "little", "big", "did", "do", "about", "any", "such", "up", "s", "already", "than", "now", "gave", "less", "more", "another", "for", "other", "goes", "would", "of", "her", "how", "told", "meet", "without", "few", "has", "ask", "run", "across", "rather", "me", "sometime", "want", "d", "look", "perhaps", "come", "o", "us", "m", "seem", "i", "u", "t", "what", "but", "last", "who", "toward", "when", "thing", "got", "can", "with", "at", "off", "in", "much", "under", "why", "also", "take", "am", "great", "in", "top")));
+	static boolean MATCH_EXACT_WORDS = true;
+	static Pattern WORD_BREAK_PATTERN = Pattern.compile("[\\p{Punct}\\s}]");
+	static Pattern LINE_BREAK_PATTERN = Pattern.compile(".*$", Pattern.MULTILINE);
+
+
 	public static Map<Class<? extends SearchCapable>, SearchCapableMetaData> getMap(String scanPath) {
 		return getMap(new String[]{scanPath});
 	}
@@ -90,19 +102,7 @@ public class GSrchUtils {
 		return getValue(obj, field);
 	}
 
-	static Set<String> NOISE_WORDS = Collections.unmodifiableSet(new HashSet<String>(Arrays.asList("the", "a", "an", "it", "or", "and", "he", "she", "with", "often", "to", "do", "that", "this", "is", "are", "one", "two", "since", "just", "start", "beyond", "could", "not", "be", "from", "on", "could", "as", "say", "said", "will", "if", "by", "on", "often", "little", "big", "did", "do", "about", "any", "such", "up", "s", "already", "than", "now", "gave", "less", "more", "another", "for", "other", "goes", "would", "of", "her", "how", "told", "meet", "without", "few", "has", "ask", "run", "across", "rather", "me", "sometime", "want", "d", "look", "perhaps", "come", "o", "us", "m", "seem", "i", "u", "t", "what", "but", "last", "who", "toward", "when", "thing", "got", "can", "with", "at", "off", "in", "much", "under", "why", "also", "take", "am", "great", "in", "top")));
-	static boolean MATCH_EXACT_WORDS = true;
-	static Pattern WORD_BREAK_PATTERN = Pattern.compile("[\\p{Punct}\\s}]");
-	static Pattern LINE_BREAK_PATTERN = Pattern.compile(".*$", Pattern.MULTILINE);
 
-
-
-	// split("[^\\w]+")
-	// http://searchguestbook.appspot.com/searchguestbook.tar.gz
-	// http://www.java2s.com/Code/Java/Regular-Expressions/CalculatingWordFrequencieswithRegularExpressions.htm
-	// http://www.devx.com/Java/Article/42216/1954?pf=true
-	// http://google-appengine.googlegroups.com/web/efficient_paging_using_key_instead_of_a_dedicated_unique_property.txt?gda=SZwzXncAAACSStSWrftt07H4FK2RtvuruXxRXPydL8WzRjsY2Fv9EQQgER4RQV57mxjvIzAWBZmQ3TeCdbqm30Qz_AwgYlIpRbcWRj3jGGBm-fgbnPJIYc4-hXRRmo3Xgj6KgtSLBeZ45alvcyXc30EbEX-RNDZveV4duv6pDMGhhhZdjQlNAw
-	// http://snowball.tartarus.org/algorithms/english/stemmer.html
 	public static List<String> getTokens(String text) {
 		String str = text.toLowerCase();
 		List<String> words = new ArrayList<String>();
