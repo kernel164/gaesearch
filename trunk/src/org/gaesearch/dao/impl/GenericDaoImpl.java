@@ -12,14 +12,14 @@ import javax.jdo.JDOObjectNotFoundException;
 import javax.jdo.PersistenceManager;
 import javax.jdo.PersistenceManagerFactory;
 
-import org.gaesearch.dao.__Generic__Dao;
+import org.gaesearch.dao.GenericDao;
 
-public abstract class __Generic__DaoImpl<K extends Serializable, T> implements __Generic__Dao<K, T> {
+public abstract class GenericDaoImpl<K extends Serializable, T> implements GenericDao<K, T> {
 	protected PersistenceManagerFactory pmf;
 
 	protected final Class<T> clazz;
 
-	protected __Generic__DaoImpl(Class<T> clazz) {
+	protected GenericDaoImpl(Class<T> clazz) {
 		this.clazz = clazz;
 	}
 

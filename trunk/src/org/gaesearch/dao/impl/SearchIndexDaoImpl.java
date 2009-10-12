@@ -10,15 +10,15 @@ import java.util.Map;
 import javax.jdo.PersistenceManager;
 import javax.jdo.Query;
 
-import org.gaesearch.dao.__Index__Dao;
-import org.gaesearch.model.jdo.__Index__;
+import org.gaesearch.dao.SearchIndexDao;
+import org.gaesearch.model.jdo.SearchIndex;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 
-public class __Index__DaoImpl extends __Generic__DaoImpl<String, __Index__> implements __Index__Dao {
-	public __Index__DaoImpl() {
-		super(__Index__.class);
+public class SearchIndexDaoImpl extends GenericDaoImpl<String, SearchIndex> implements SearchIndexDao {
+	public SearchIndexDaoImpl() {
+		super(SearchIndex.class);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -45,7 +45,7 @@ public class __Index__DaoImpl extends __Generic__DaoImpl<String, __Index__> impl
 		int len = ids.size();
 		for (int i = 0; i < len; i++) {
 			String id = ids.get(i);
-			__Index__ index = get(id);
+			SearchIndex index = get(id);
 			if (index != null) {
 				Multimap<String, Long> m = index.getContent();
 				System.out.println("getIndexes: " + m);
@@ -62,7 +62,7 @@ public class __Index__DaoImpl extends __Generic__DaoImpl<String, __Index__> impl
 		int len = ids.size();
 		for (int i = 0; i < len; i++) {
 			String id = ids.get(i);
-			__Index__ index = get(id);
+			SearchIndex index = get(id);
 			if (index != null) {
 				// multiMap.putAll(index.getContent());
 				result.put(id, index.getContent());
@@ -75,16 +75,16 @@ public class __Index__DaoImpl extends __Generic__DaoImpl<String, __Index__> impl
     @Override
 	public Multimap<String, Long> getIndexesByPrefixes(String... prefixes) {
 		PersistenceManager pm = pmf.getPersistenceManager();
-		Query query = pm.newQuery(__Index__.class);
+		Query query = pm.newQuery(SearchIndex.class);
 		query.setFilter(this.getStartsWith("token", prefixes));
 		Multimap<String, Long> multiMap = HashMultimap.create();
 		// String q = "select from " + __Index__.class.getName() + " where " +
 		// getStartsWith("name", prefixes);
 		try {
-			List<__Index__> indexes = (List<__Index__>) query.execute();
-			Iterator<__Index__> it = indexes.iterator();
+			List<SearchIndex> indexes = (List<SearchIndex>) query.execute();
+			Iterator<SearchIndex> it = indexes.iterator();
 			while (it.hasNext()) {
-				__Index__ index = it.next();
+				SearchIndex index = it.next();
 				Multimap<String, Long> m = index.getContent();
 				System.out.println("getIndexesByPrefixes: " + m);
 				multiMap.putAll(m);
@@ -100,16 +100,16 @@ public class __Index__DaoImpl extends __Generic__DaoImpl<String, __Index__> impl
 	@Override
 	public Map<String, Multimap<String, Long>> getIndexMapByPrefixes(String... prefixes) {
 		PersistenceManager pm = pmf.getPersistenceManager();
-		Query query = pm.newQuery(__Index__.class);
+		Query query = pm.newQuery(SearchIndex.class);
 		query.setFilter(getStartsWith("token", prefixes));
 		Map<String, Multimap<String, Long>> result = new HashMap<String, Multimap<String, Long>>();
 		// String q = "select from " + __Index__.class.getName() + " where " +
 		// getStartsWith("name", prefixes);
 		try {
-			List<__Index__> indexes = (List<__Index__>) query.execute();
-			Iterator<__Index__> it = indexes.iterator();
+			List<SearchIndex> indexes = (List<SearchIndex>) query.execute();
+			Iterator<SearchIndex> it = indexes.iterator();
 			while (it.hasNext()) {
-				__Index__ index = it.next();
+				SearchIndex index = it.next();
 				Multimap<String, Long> m = index.getContent();
 				System.out.println("getIndexesByPrefixes: " + m);
 				result.put(index.getToken(), m);

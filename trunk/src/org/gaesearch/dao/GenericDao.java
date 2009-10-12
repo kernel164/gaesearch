@@ -6,7 +6,7 @@ import java.util.List;
 
 import javax.jdo.PersistenceManagerFactory;
 
-public interface __Generic__Dao<K extends Serializable, T> {
+public interface GenericDao<K extends Serializable, T> {
 	void setPersistenceManagerFactory(PersistenceManagerFactory pmf);
 
 	List<T> getAll();
